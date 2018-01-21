@@ -14,6 +14,8 @@ stored in `cities`.
 Example usage and output:
 
 ```
+git clone https://github.com/mkenworthy/tzones.git
+cd tzones
 python tzones.py
 
 Current time in Leiden is 2018-01-21 12:51 CET+0100
