@@ -35,7 +35,7 @@ If multiple cities are found (e.g. Louisville has 2 hits) then use the
 
 ## License
 
-This project is licensed under the BSD 2-Clause License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the BSD 2-Clause License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgements
 
