@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from datetime import datetime
+from datetime import datetime, date
 from astropy.table import Table
 import pytz # pip install pytz
 
@@ -48,10 +48,19 @@ def get_tzone():
         ttz = Table(ttz, dtype=(str,str,str,str))
     return ttz
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--version', action='version', version='1.0.0')
+#parser.add_argument('hour', help='specify what hour to work at')
+#args = parser.parse_args()
+
+
 fmt = '%Y-%m-%d %H:%M %Z%z'
 
 ttz = get_tzone()
 
+# parse all the cities
 for city in cities:
     # see how many matches there are
     tcity = ttz[(ttz['asciiname'] == city) + (ttz['geoid'] == city)]
@@ -67,5 +76,31 @@ for city in cities:
         citytz = tcity['tz'][0]
 
         now = datetime.now(pytz.timezone(citytz))
-        print("")
-        print("Current time in %s is %s" % (cityname, now.strftime(fmt)))
+#        print("")
+#        print("Current time in %s is %s" % (cityname, now.strftime(fmt)))
+
+        # so sart from last midnight from first timezone....
+
+        #what is local date in local tz right now?
+        dnow = date.today()
+
+        # make a date and time object for 00h in local tz
+        # and loop trough 24 h
+        d=datetime.today()
+        r1 = ''
+        r2 = ''
+        for h in range(20):
+            dh = d.replace(hour=h,minute=0,second=0,microsecond=0)
+            dhn = dh.astimezone(tz=pytz.timezone(citytz))
+        # convert to local date and time for the city
+            if dhn.hour > 0:
+                r1 = r1 + dhn.strftime('%I  ')
+                r2 = r2 + dhn.strftime('%p  ')
+            else:
+                r1 = r1 + dhn.strftime('%b ')
+                r2 = r2 + dhn.strftime('%d  ')
+
+        print('{0:16s}{1:>6s}   {2:s}'.format(cityname, now.strftime('%I:%M%P'),r1))
+        print('{0:10s}{1:>12s}   {2:s}'.format(now.strftime('%Z%z'), now.strftime('%a, %b %d'),r2))
+        print('')
+
